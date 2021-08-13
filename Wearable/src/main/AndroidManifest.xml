@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="me.petterim1.digitalwatch"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-feature android:name="android.hardware.type.watch"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <application
+        android:icon="@drawable/preview"
+        android:label="DigitalWatch">
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true"/>
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="false"/>
+        <service
+            android:name="DigitalWatch"
+            android:label="DigitalWatch"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <meta-data
+                android:name="android.service.wallpaper.square_mode"
+                android:value="false"/>
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face"/>
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/preview"/>
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview_circular"
+                android:resource="@drawable/preview"/>
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService"/>
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE"/>
+            </intent-filter>
+        </service>
+    </application>
+</manifest>

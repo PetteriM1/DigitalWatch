@@ -1,0 +1,65 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.0.0'
+    }
+}
+
+apply plugin: 'com.android.application'
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'androidx.palette:palette:1.0.0'
+    implementation 'androidx.wear:wear:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation 'com.google.android.support:wearable:2.8.1'
+    compileOnly 'com.google.android.wearable:wearable:2.8.1'
+}
+
+List<String> dirs = [
+    'main',
+    'common',
+    'template']
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        versionCode 1
+        versionName "1.0"
+        minSdkVersion 24
+        targetSdkVersion 28
+        multiDexEnabled true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    sourceSets {
+        main {
+            dirs.each { dir ->
+                java.srcDirs "src/${dir}/java"
+                res.srcDirs "src/${dir}/res"
+            }
+        }
+        androidTest.setRoot('tests')
+        androidTest.java.srcDirs = ['tests/src']
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+        }
+    }
+}

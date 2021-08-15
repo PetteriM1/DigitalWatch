@@ -16,7 +16,7 @@ import java.util.Calendar;
 
 public class DigitalWatch extends CanvasWatchFaceService {
 
-    private static final String[] WEEKDAYS = {"null", "su", "ma", "ti", "ke", "to", "pe", "la"};
+    private static final String[] WEEKDAYS = {"", "su", "ma", "ti", "ke", "to", "pe", "la"};
 
     @Override
     public Engine onCreateEngine() {
@@ -35,8 +35,7 @@ public class DigitalWatch extends CanvasWatchFaceService {
                 if (msg.what == 0) {
                     if (shouldRun()) {
                         invalidate();
-                        long delayMs = 1000 - (System.currentTimeMillis() % 1000);
-                        updateTimeHandler.sendEmptyMessageDelayed(0, delayMs);
+                        updateTimeHandler.sendEmptyMessageDelayed(0, 1000 - (System.currentTimeMillis() % 1000));
                     }
                 }
             }
@@ -50,13 +49,10 @@ public class DigitalWatch extends CanvasWatchFaceService {
         Paint secondPaint;
         Paint colonPaint;
         float xOffset;
-        float xOffset2;
         float yOffset;
-        float lineHeight;
         float secondLine;
         float timeWidth;
         float colonWidth;
-        float dateWidth;
 
         @Override
         public void onCreate(SurfaceHolder holder) {
@@ -65,22 +61,20 @@ public class DigitalWatch extends CanvasWatchFaceService {
             calendar = Calendar.getInstance();
             Resources res = DigitalWatch.this.getResources();
             xOffset = res.getDimension(R.dimen.digital_x_offset);
-            xOffset2 = res.getDimension(R.dimen.digital_x_offset_2);
             yOffset = res.getDimension(R.dimen.digital_y_offset);
-            lineHeight = res.getDimension(R.dimen.digital_line_height);
-            secondLine = yOffset + lineHeight;
+            secondLine = yOffset + res.getDimension(R.dimen.digital_line_height);
             bgPaint = new Paint();
             bgPaint.setColor(Color.BLACK);
             bgPaint.setAntiAlias(false);
             float textSize = res.getDimension(R.dimen.digital_text_size);
             hourPaint = textPaint(Color.WHITE, textSize);
+            timeWidth = hourPaint.measureText("Xx");
+            colonWidth = hourPaint.measureText("-");
             minutePaint = textPaint(Color.WHITE, textSize);
             secondPaint = textPaint(Color.WHITE, textSize);
             colonPaint = textPaint(Color.GRAY, textSize);
             datePaint = textPaint(Color.GRAY, res.getDimension(R.dimen.digital_date_text_size));
-            timeWidth = hourPaint.measureText("Xx");
-            colonWidth = hourPaint.measureText("-");
-            dateWidth = datePaint.measureText("xx ");
+            datePaint.setTextAlign(Paint.Align.CENTER);
         }
 
         @Override
@@ -123,10 +117,7 @@ public class DigitalWatch extends CanvasWatchFaceService {
                 canvas.drawText(":", x, yOffset, colonPaint);
                 x += colonWidth;
                 canvas.drawText(add0(calendar.get(Calendar.SECOND)), x, yOffset, secondPaint);
-                x = xOffset2;
-                canvas.drawText(WEEKDAYS[calendar.get(Calendar.DAY_OF_WEEK)], x, secondLine, datePaint);
-                x += dateWidth;
-                canvas.drawText(add0(calendar.get(Calendar.DAY_OF_MONTH)) + "." + add01(calendar.get(Calendar.MONTH)) + ".", x, secondLine, datePaint);
+                canvas.drawText(WEEKDAYS[calendar.get(Calendar.DAY_OF_WEEK)] + ' ' + add0(calendar.get(Calendar.DAY_OF_MONTH)) + '.' + add01(calendar.get(Calendar.MONTH)) + '.', canvas.getWidth() >> 1, secondLine, datePaint);
             }
         }
 

@@ -3,7 +3,6 @@
     <dimen name="digital_text_size">45dp</dimen>
     <dimen name="digital_date_text_size">18dp</dimen>
     <dimen name="digital_x_offset">25dp</dimen>
-    <dimen name="digital_x_offset_2">78dp</dimen>
     <dimen name="digital_y_offset">115dp</dimen>
     <dimen name="digital_line_height">30dp</dimen>
 </resources>

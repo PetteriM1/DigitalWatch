@@ -16,7 +16,7 @@ import java.util.Calendar;
 
 public class DigitalWatch extends CanvasWatchFaceService {
 
-    private static final String[] WEEKDAYS = {"", "su", "ma", "ti", "ke", "to", "pe", "la"};
+    private static final String[] WEEKDAYS = {"", "su ", "ma ", "ti ", "ke ", "to ", "pe ", "la "};
 
     @Override
     public Engine onCreateEngine() {
@@ -117,7 +117,7 @@ public class DigitalWatch extends CanvasWatchFaceService {
                 canvas.drawText(":", x, yOffset, colonPaint);
                 x += colonWidth;
                 canvas.drawText(add0(calendar.get(Calendar.SECOND)), x, yOffset, secondPaint);
-                canvas.drawText(WEEKDAYS[calendar.get(Calendar.DAY_OF_WEEK)] + ' ' + add0(calendar.get(Calendar.DAY_OF_MONTH)) + '.' + add01(calendar.get(Calendar.MONTH)) + '.', canvas.getWidth() >> 1, secondLine, datePaint);
+                canvas.drawText(WEEKDAYS[calendar.get(Calendar.DAY_OF_WEEK)] + add0(calendar.get(Calendar.DAY_OF_MONTH)) + '.' + add01(calendar.get(Calendar.MONTH)) + '.', canvas.getWidth() >> 1, secondLine, datePaint);
             }
         }
 

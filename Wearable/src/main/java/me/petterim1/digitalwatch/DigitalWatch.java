@@ -1,5 +1,7 @@
 package me.petterim1.digitalwatch;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
 import java.util.Calendar;
@@ -100,6 +103,36 @@ public class DigitalWatch extends CanvasWatchFaceService {
             super.onAmbientModeChanged(ambient);
             invalidate();
             updateTimer();
+        }
+
+        private float x1;
+        private float y1;
+
+        @Override
+        public void onTouchEvent(MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    x1 = event.getX();
+                    y1 = event.getY();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (x1 < 20) {
+                        float x2 = event.getX();
+                        if (Math.abs(x2 - x1) > 150 && Math.abs(event.getY() - y1) < 150) {
+                            if (x2 > x1) {
+                                PackageManager pm = getPackageManager();
+                                Intent intent = pm.getLaunchIntentForPackage("design.swirl.wearlauncher");
+                                if (intent != null) {
+                                    if (pm.queryIntentActivities(intent, 0).size() > 0) {
+                                        startActivity(intent);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+            super.onTouchEvent(event);
         }
 
         @Override

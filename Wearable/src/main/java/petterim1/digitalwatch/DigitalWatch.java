@@ -1,4 +1,4 @@
-package me.petterim1.digitalwatch;
+package petterim1.digitalwatch;
 
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -33,7 +33,7 @@ public class DigitalWatch extends CanvasWatchFaceService {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == 0) {
-                    if (shouldRun()) {
+                    if (isVisible()) {
                         invalidate();
                         updateTimeHandler.sendEmptyMessageDelayed(0, 1000 - (System.currentTimeMillis() % 1000));
                     }
@@ -44,9 +44,7 @@ public class DigitalWatch extends CanvasWatchFaceService {
         Calendar calendar;
         Paint bgPaint;
         Paint datePaint;
-        Paint hourPaint;
-        Paint minutePaint;
-        Paint secondPaint;
+        Paint timePaint;
         Paint colonPaint;
         float xOffset;
         float yOffset;
@@ -67,11 +65,9 @@ public class DigitalWatch extends CanvasWatchFaceService {
             bgPaint.setColor(Color.BLACK);
             bgPaint.setAntiAlias(false);
             float textSize = res.getDimension(R.dimen.digital_text_size);
-            hourPaint = textPaint(Color.WHITE, textSize);
-            timeWidth = hourPaint.measureText("Xx");
-            colonWidth = hourPaint.measureText("-");
-            minutePaint = textPaint(Color.WHITE, textSize);
-            secondPaint = textPaint(Color.WHITE, textSize);
+            timePaint = textPaint(Color.WHITE, textSize);
+            timeWidth = timePaint.measureText("Xx");
+            colonWidth = timePaint.measureText("-");
             colonPaint = textPaint(Color.GRAY, textSize);
             datePaint = textPaint(Color.GRAY, res.getDimension(R.dimen.digital_date_text_size));
             datePaint.setTextAlign(Paint.Align.CENTER);
@@ -96,29 +92,20 @@ public class DigitalWatch extends CanvasWatchFaceService {
         }
 
         @Override
-        public void onAmbientModeChanged(boolean ambient) {
-            super.onAmbientModeChanged(ambient);
-            invalidate();
-            updateTimer();
-        }
-
-        @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             calendar.setTimeInMillis(System.currentTimeMillis());
             canvas.drawRect(0, 0, bounds.width(), bounds.height(), bgPaint);
             float x = xOffset;
-            canvas.drawText(add0(calendar.get(Calendar.HOUR_OF_DAY)), x, yOffset, hourPaint);
+            canvas.drawText(add0(calendar.get(Calendar.HOUR_OF_DAY)), x, yOffset, timePaint);
             x += timeWidth;
             canvas.drawText(":", x, yOffset, colonPaint);
             x += colonWidth;
-            canvas.drawText(add0(calendar.get(Calendar.MINUTE)), x, yOffset, minutePaint);
+            canvas.drawText(add0(calendar.get(Calendar.MINUTE)), x, yOffset, timePaint);
             x += timeWidth;
-            if (!isInAmbientMode()) {
-                canvas.drawText(":", x, yOffset, colonPaint);
-                x += colonWidth;
-                canvas.drawText(add0(calendar.get(Calendar.SECOND)), x, yOffset, secondPaint);
-                canvas.drawText(WEEKDAYS[calendar.get(Calendar.DAY_OF_WEEK)] + add0(calendar.get(Calendar.DAY_OF_MONTH)) + '.' + add01(calendar.get(Calendar.MONTH)) + '.', canvas.getWidth() >> 1, secondLine, datePaint);
-            }
+            canvas.drawText(":", x, yOffset, colonPaint);
+            x += colonWidth;
+            canvas.drawText(add0(calendar.get(Calendar.SECOND)), x, yOffset, timePaint);
+            canvas.drawText(WEEKDAYS[calendar.get(Calendar.DAY_OF_WEEK)] + add0(calendar.get(Calendar.DAY_OF_MONTH)) + '.' + add01(calendar.get(Calendar.MONTH)) + '.', canvas.getWidth() >> 1, secondLine, datePaint);
         }
 
         private String add0(int n) {
@@ -143,13 +130,9 @@ public class DigitalWatch extends CanvasWatchFaceService {
 
         private void updateTimer() {
             updateTimeHandler.removeMessages(0);
-            if (shouldRun()) {
+            if (isVisible()) {
                 updateTimeHandler.sendEmptyMessage(0);
             }
-        }
-
-        private boolean shouldRun() {
-            return isVisible() && !isInAmbientMode();
         }
     }
 }

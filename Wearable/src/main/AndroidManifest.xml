@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="me.petterim1.digitalwatch"
+<manifest package="petterim1.digitalwatch"
           xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-feature android:name="android.hardware.type.watch"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
@@ -13,7 +13,7 @@
             android:name="com.google.android.wearable"
             android:required="false"/>
         <service
-            android:name="DigitalWatch"
+            android:name="petterim1.digitalwatch.DigitalWatch"
             android:label="DigitalWatch"
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
